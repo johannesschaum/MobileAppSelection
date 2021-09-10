@@ -53,6 +53,8 @@ class ListWidget : AppWidgetProvider() {
                 )
             );
 
+            print("LULW")
+
 
             appWidgetManager.updateAppWidget(appWidgetId,views)
         }
