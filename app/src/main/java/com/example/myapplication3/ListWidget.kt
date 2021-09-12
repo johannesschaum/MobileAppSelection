@@ -6,6 +6,7 @@ import android.appwidget.AppWidgetProvider
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import android.content.Intent.*
 import android.net.Uri
 import android.widget.RemoteViews
 import android.widget.Toast
@@ -53,7 +54,6 @@ class ListWidget : AppWidgetProvider() {
                 )
             );
 
-            print("LULW")
 
 
             appWidgetManager.updateAppWidget(appWidgetId,views)
@@ -72,6 +72,10 @@ class ListWidget : AppWidgetProvider() {
 
             val packageName = intent.getStringExtra(APP_TO_OPEN)
             val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName!!);
+            launchIntent.apply {
+                this!!.addCategory(CATEGORY_BROWSABLE)
+                flags = FLAG_ACTIVITY_NEW_TASK or FLAG_ACTIVITY_REQUIRE_NON_BROWSER
+            }
             context.startActivity(launchIntent);
 
         } else if (ACTION_REROLL.equals(intent.action)) {
@@ -93,7 +97,7 @@ class ListWidget : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         // Enter relevant functionality for when the first widget is created
 
-//        onUpdate(context)
+        onUpdate(context)
 
     }
 
