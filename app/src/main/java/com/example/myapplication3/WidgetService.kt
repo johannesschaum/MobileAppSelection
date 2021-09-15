@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.RemoteViews
 import android.widget.RemoteViewsService
+import android.widget.Toast
 import androidx.core.graphics.drawable.toBitmap
 import com.example.myapplication3.ListWidget.Companion.APP_TO_OPEN
 
@@ -38,6 +39,8 @@ class WidgetService: RemoteViewsService() {
 
         }
 
+        var appWidgetID = 0
+
 
     }
 
@@ -59,6 +62,9 @@ class WidgetService: RemoteViewsService() {
             appWidgetId = intent.getIntExtra(
                 AppWidgetManager.EXTRA_APPWIDGET_ID,
                 AppWidgetManager.INVALID_APPWIDGET_ID)
+
+            appWidgetID = appWidgetId
+
         }
 
         override fun onCreate() {

@@ -34,12 +34,14 @@ class ListWidget : AppWidgetProvider() {
 
             val serviceIntent = Intent(context, WidgetService::class.java)
             serviceIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
-            serviceIntent.data = Uri.parse(serviceIntent.toUri(Intent.URI_INTENT_SCHEME))
+            serviceIntent.data = Uri.parse(serviceIntent.toUri(URI_INTENT_SCHEME))
 
             val clickIntent = Intent(context, ListWidget::class.java)
             clickIntent.action = OPEN_APP
             val clickPendingIntent = PendingIntent.getBroadcast(context,
                 0, clickIntent, 0)
+
+
 
 
             val views = RemoteViews(context.packageName, R.layout.list_widget)
@@ -50,17 +52,18 @@ class ListWidget : AppWidgetProvider() {
             views.setOnClickPendingIntent(
                 R.id.button, getPendingSelfIntent(
                     context,
-                    ACTION_REROLL
+                    ACTION_REROLL, appWidgetId
                 )
             );
 
-
-
             appWidgetManager.updateAppWidget(appWidgetId,views)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,
+                R.id.widget_list_view)
+
         }
     }
 
-    private fun getPendingSelfIntent(context: Context, action: String): PendingIntent? {
+    private fun getPendingSelfIntent(context: Context, action: String, appWidgetId: Int): PendingIntent? {
         val intent =
             Intent(context, javaClass) // An intent directed at the current class (the "self").
         intent.action = action
@@ -78,16 +81,18 @@ class ListWidget : AppWidgetProvider() {
             }
             context.startActivity(launchIntent);
 
-        } else if (ACTION_REROLL.equals(intent.action)) {
+        } else if (ACTION_REROLL == intent.action) {
 
             WidgetService.addApp()
 
-            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
-                AppWidgetManager.INVALID_APPWIDGET_ID)
+//            val appWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+//                AppWidgetManager.INVALID_APPWIDGET_ID)
 
-//            val appWidgetManager = AppWidgetManager.getInstance(context)
-//            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,
-//                R.id.example_widget_stack_view)
+            val appWidgetId = WidgetService.appWidgetID
+
+            val appWidgetManager = AppWidgetManager.getInstance(context)
+            appWidgetManager.notifyAppWidgetViewDataChanged(appWidgetId,
+                R.id.widget_list_view)
 
 
         }
